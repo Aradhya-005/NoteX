@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import React, { useState } from 'react';
@@ -7,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation'; // Import useRouter
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase/firebaseConfig';
-import { signUpWithEmailPassword } from '../../firebase/auth';
+import { signUpWithEmailPassword } from '../../firebase/auth'; // Ensure this is correctly imported
 import Link from 'next/link';
 import googleIcon from "../../../public/img/google-brands-solid.svg";
 import twitterIcon from "../../../public/img/x-twitter-brands-solid.svg";
@@ -27,8 +25,12 @@ const SignupPage = () => {
       await signInWithPopup(auth, provider);
       console.log('Successfully signed in with Google');
       router.push('/dashboard'); // Redirect to dashboard on successful Google sign-in
-    } catch (error) {
-      setError('Error signing in with Google: ' + (error as Error).message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError('Error signing in with Google: ' + error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
       console.error('Error signing in with Google:', error);
     }
   };
@@ -41,11 +43,15 @@ const SignupPage = () => {
       setTimeout(() => {
         router.push('/dashboard'); // Redirect to dashboard after a short delay
       }, 2000); // Delay in milliseconds
-    } catch (error) {
-      if (error.code === 'auth/email-already-in-use') {
-        setError('This email is already in use. Please try logging in.');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (error.code === 'auth/email-already-in-use') {
+          setError('This email is already in use. Please try logging in.');
+        } else {
+          setError('Error signing up with email and password: ' + error.message);
+        }
       } else {
-        setError('Error signing up with email and password: ' + (error as Error).message);
+        setError('An unexpected error occurred.');
       }
       console.error('Error signing up with email and password:', error);
     }
@@ -99,4 +105,3 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
-

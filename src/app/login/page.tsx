@@ -33,7 +33,10 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/dashboard'); // Redirect to dashboard on successful email/password login
+      toast.success('Login successful! Redirecting to dashboard...'); // Success message
+      setTimeout(() => {
+        router.push('/dashboard'); // Redirect to dashboard after a short delay
+      }, 2000); // Delay in milliseconds
     } catch (error) {
       console.error("Error signing in with email and password:", error);
       let errorMessage = 'Invalid email or password. Please try again.';
