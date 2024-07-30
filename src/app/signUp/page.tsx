@@ -11,6 +11,7 @@ import googleIcon from "../../../public/img/google-brands-solid.svg";
 import twitterIcon from "../../../public/img/x-twitter-brands-solid.svg";
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast
+import { FirebaseError } from 'firebase/app';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -24,9 +25,10 @@ const SignupPage = () => {
     try {
       await signInWithPopup(auth, provider);
       console.log('Successfully signed in with Google');
+      toast.success('Successfully signed in with Google'); // Show success toast
       router.push('/dashboard'); // Redirect to dashboard on successful Google sign-in
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      if (error instanceof FirebaseError) {
         setError('Error signing in with Google: ' + error.message);
       } else {
         setError('An unexpected error occurred.');
@@ -44,12 +46,14 @@ const SignupPage = () => {
         router.push('/dashboard'); // Redirect to dashboard after a short delay
       }, 2000); // Delay in milliseconds
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      if (error instanceof FirebaseError) {
         if (error.code === 'auth/email-already-in-use') {
           setError('This email is already in use. Please try logging in.');
         } else {
           setError('Error signing up with email and password: ' + error.message);
         }
+      } else if (error instanceof Error) {
+        setError('Error signing up with email and password: ' + error.message);
       } else {
         setError('An unexpected error occurred.');
       }
@@ -63,10 +67,17 @@ const SignupPage = () => {
       <p className="mb-6 text-sm text-[#fffcfca4]">Enter your email below to create your account</p>
       {error && <p className="mb-4 text-red-500">{error}</p>}
       <div className="flex justify-between mb-4">
-        <button className="flex items-center justify-center px-11 py-2 rounded-md border border-[#99999938] hover:bg-[#99999938]">
+        <button 
+          className="flex items-center justify-center px-11 py-2 rounded-md border border-[#99999938] hover:bg-[#99999938]" 
+          aria-label="Sign up with Twitter"
+        >
           <Image src={twitterIcon} alt="Twitter Icon" width={15} height={15} className="mr-2" /> Twitter
         </button>
-        <button onClick={handleGoogle} className="flex items-center justify-center px-11 py-2 rounded-md border border-[#99999938] hover:bg-[#99999938]">
+        <button 
+          onClick={handleGoogle} 
+          className="flex items-center justify-center px-11 py-2 rounded-md border border-[#99999938] hover:bg-[#99999938]"
+          aria-label="Sign up with Google"
+        >
           <Image src={googleIcon} alt="Google Icon" width={15} height={15} className="mr-2" /> Google
         </button>
       </div>
@@ -86,6 +97,7 @@ const SignupPage = () => {
           className="p-2 mb-4 bg-[#0a0a0a] rounded-md border border-[#99999938]" 
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          aria-describedby="email-help"
         />
         <label htmlFor="password" className="mb-1">Password</label>
         <input 
@@ -95,6 +107,7 @@ const SignupPage = () => {
           className="p-2 mb-4 bg-[#0a0a0a] rounded-md border border-[#99999938]" 
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          aria-describedby="password-help"
         />
         <button type="submit" className="bg-white text-black px-4 py-2 rounded-md hover:bg-[#edebebfc]">Create account</button>
         <p className='text-[#fffcfc8f] mb-7 mt-4'>Already have an account? <Link href="/login">Sign In</Link></p>

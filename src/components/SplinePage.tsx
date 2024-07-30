@@ -1,7 +1,7 @@
 
 
 import React from 'react';
-import Spline from '@splinetool/react-spline/next';
+import Spline from '@splinetool/react-spline';
 import styles from './SplinePage.module.css';
 
 const SplinePage = () => {
