@@ -1,0 +1,21 @@
+/* src/app/global.css */
+
+@keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  .text-gradient {
+    background: linear-gradient(270deg, #22d88f, #e054c4, #86a8e7, #f14343);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* text-fill-color: transparent; */
+    animation: gradientMove 3s ease infinite;
+  }
+  
