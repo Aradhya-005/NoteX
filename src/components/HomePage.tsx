@@ -3,7 +3,7 @@ import React from "react";
 
 const HomePage = () => {
   return (
-    <div className="max-w-96 ml-32 mt-32">
+    <div className="max-w-96 ml-32 mt-32  xs:ml-10 xs:mt-96">
       <h1
   className="logo font-semibold text-7xl mb-10"
   style={{
